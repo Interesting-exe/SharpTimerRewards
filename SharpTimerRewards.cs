@@ -30,8 +30,9 @@ public class RewardsConfig : BasePluginConfig
 
 public class SharpTimerRewards : BasePlugin, IPluginConfig<RewardsConfig>
 {
-    public override string ModuleName { get; }
-    public override string ModuleVersion { get; }
+    public override string ModuleName => "SharpTimerRewards";
+    public override string ModuleVersion => "1.0.0";
+    public override string ModuleAuthor => "Interesting";
     public RewardsConfig Config { get; set; }
     
     public void OnConfigParsed(RewardsConfig config)
