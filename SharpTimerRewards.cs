@@ -68,10 +68,10 @@ public class SharpTimerRewards : BasePlugin, IPluginConfig<RewardsConfig>
             IStoreApi? api = new PluginCapability<IStoreApi>("store:api").Get();
             if (api == null)
                 return;
-            if (e.player != null)
+            if (e.Player != null)
             {
-                api.GivePlayerCredits(e.player, reward);
-                e.player.PrintToChat($" {Config.Prefix} you received {ChatColors.Green}{reward} credits{ChatColors.White} for completing the map!");
+                api.GivePlayerCredits(e.Player, reward);
+                e.Player.PrintToChat($" {Config.Prefix} you received {ChatColors.Green}{reward} credits{ChatColors.White} for completing the map!");
             }
         }
     }
