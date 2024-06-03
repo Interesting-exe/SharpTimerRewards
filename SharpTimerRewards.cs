@@ -65,8 +65,8 @@ public class SharpTimerRewards : BasePlugin, IPluginConfig<RewardsConfig>
                 return;
             int reward = e.IsSr ? Config.SrReward : Config.RewardAmount;
             if (e.Tier > 1)
-                reward *= (e.Tier - 1);
-            IStoreApi? api = new PluginCapability<IStoreApi>("store:api").Get();
+                reward = (int)(reward * Math.Pow(Config.TierMultiplier, e.Tier-1));
+            var api = IStoreApi.Capability.Get();
             if (api == null)
                 return;
             if (e.Player != null)
