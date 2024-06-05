@@ -1,8 +1,10 @@
 ﻿using System.Text.Json.Serialization;
 using CounterStrikeSharp.API;
 using CounterStrikeSharp.API.Core;
+using CounterStrikeSharp.API.Core.Attributes.Registration;
 using CounterStrikeSharp.API.Core.Capabilities;
 using CounterStrikeSharp.API.Core.Translations;
+using CounterStrikeSharp.API.Modules.Memory;
 using CounterStrikeSharp.API.Modules.Utils;
 using SharpTimerAPI;
 using SharpTimerAPI.Events;
@@ -31,7 +33,7 @@ public class RewardsConfig : BasePluginConfig
 public class SharpTimerRewards : BasePlugin, IPluginConfig<RewardsConfig>
 {
     public override string ModuleName => "SharpTimerRewards";
-    public override string ModuleVersion => "1.0.1";
+    public override string ModuleVersion => "1.0.2";
     public override string ModuleAuthor => "Interesting";
     public RewardsConfig Config { get; set; }
     
@@ -43,16 +45,15 @@ public class SharpTimerRewards : BasePlugin, IPluginConfig<RewardsConfig>
 
     public override void Load(bool hotReload)
     {
-        var sender = new PluginCapability<ISharpTimerEventSender>("sharptimer:event_sender").Get();
-        if(sender == null)
-        {
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine("[TimerRewards] Failed to get ISharpTimerEventSender");
-            return;
-        }
-
         AddTimer(0.5f, () =>
         {
+            var sender = new PluginCapability<ISharpTimerEventSender>("sharptimer:event_sender").Get();
+            if(sender == null)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("[TimerRewards] Failed to get ISharpTimerEventSender");
+                return;
+            }
             sender.STEventSender += OnTimer;
         });
     }
@@ -68,7 +69,11 @@ public class SharpTimerRewards : BasePlugin, IPluginConfig<RewardsConfig>
                 reward = (int)(reward * Math.Pow(Config.TierMultiplier, e.Tier-1));
             var api = IStoreApi.Capability.Get();
             if (api == null)
+            {
+                Console.WriteLine($" [TimerRewards] Couldn't get StoreAPI");
                 return;
+            }
+
             if (e.Player != null)
             {
                 api.GivePlayerCredits(e.Player, reward);
